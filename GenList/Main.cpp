@@ -1,21 +1,40 @@
 #include "GenList.h"
 int main()
 {
-	GenList<int> gl;
-	gl.Show(); cout << endl;
-	cout << "depth:" << gl.GetDepth() << endl;
-	gl.Insert(1);
-	gl.Insert(2);
-	gl.Insert(3);
-	gl.Insert(4);
-	gl.Show(); cout << endl;
+	cout << "定义表1" << endl;
 	GenList<int> gl1;
-	cout << "depth:" << gl1.GetDepth() << endl;
-	gl1.Insert(gl);
-	gl1.Insert(5);
-	gl1.Insert(6);
-	gl1.Show(); cout << endl;
-	cout << "depth:" << gl1.GetDepth() << endl;
-	cout << "lenth:" << gl1.GetLength() << endl;
+	gl1.Show(); cout << endl <<endl;
+
+	cout << "插入表1：1,2,3,4" << endl;
+	gl1.Insert(1); gl1.Insert(2); gl1.Insert(3); gl1.Insert(4);
+	gl1.Show(); cout << endl <<endl;
+
+	cout << "定义表2" << endl;
+	GenList<int> gl2;
+	gl2.Show(); cout << endl <<endl;
+
+	cout << "插入表2：5,6" << endl;
+	gl2.Insert(5); gl2.Insert(6);
+	gl2.Show(); cout << endl <<endl;
+
+	cout << "将表1插入表2" << endl;
+	gl2.Insert(gl1);
+	gl2.Show(); cout << endl << endl;
+
+	cout << "定义表3" << endl;
+	GenList<int> gl3;
+	gl3.Show(); cout << endl << endl;
+
+	cout << "将表2插入表3" << endl;
+	gl3.Insert(gl2);
+	gl3.Show(); cout << endl << endl;
+
+	cout << "插入表3：7,8,9" << endl;
+	gl3.Insert(7); gl3.Insert(8); gl3.Insert(9);
+	gl3.Show(); cout << endl << endl;
+
+	cout << "表3的深度：" << gl3.GetDepth() << endl;
+	cout << "表3的长度：" << gl3.GetLength() << endl;
+	cout << endl;
 	return 0;
 }

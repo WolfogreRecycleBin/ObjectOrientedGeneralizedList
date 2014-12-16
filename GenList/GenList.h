@@ -1,70 +1,69 @@
 #ifndef GENLIST_H
 #define GENLIST_H
-#define TCE template <class ET>
 #include <iostream>
 using namespace std;
-TCE class GenList;
+
+template <class ElemType> class GenList;
 enum GenListNodeType{ HEAD, ATOM, LIST};
-TCE struct GenListNode
+
+template <class ElemType> 
+struct GenListNode
 {
 	GenListNodeType tag;
-	ET atom;
-	GenList<ET> *list;
-	GenListNode<ET> *next;
-	GenListNode<ET>()
+	ElemType atom;
+	GenList<ElemType> *list;
+	GenListNode<ElemType> *next;
+
+	GenListNode<ElemType>()
 	{
 		tag = HEAD;
 		atom = 0;
 		list = NULL;
 		next = NULL;
 	}
-	GenListNode<ET> &operator=(const GenListNode<ET> gl)
+	~GenListNode<ElemType>()
 	{
-		list = NULL;
-		next = NULL;
-		tag = gl.tag;
-		atom = gl.atom;
-		if (gl.list)
-		{
-			list = new GenList<ET>(*(gl.list));
-		}
+		if (list) delete list;
 	}
 };
-TCE class GenList
+template <class ElemType> 
+class GenList
 {
 public:
 	GenList();
-	GenList(const GenList<ET> &gl);
+	GenList(const GenList<ElemType> &gl);
 	virtual ~GenList();
 	bool IsEmpty() const;
-	void Insert(const ET &e);
+	void Insert(const ElemType &e);
 	void Insert(const GenList &gl);
 	int GetDepth() const;
 	int GetLength() const;
 	void Show() const;
 private:
-	GenListNode<ET> *head;
+	GenListNode<ElemType> *head;
 };
 
-TCE GenList<ET>::GenList()
+template <class ElemType> 
+GenList<ElemType>::GenList()
 {
-	head = new GenListNode<ET>;
+	head = new GenListNode<ElemType>;
 	head->next = NULL;
 }
 
-TCE GenList<ET>::GenList(const GenList<ET> &gl)
+template <class ElemType> 
+GenList<ElemType>::GenList(const GenList<ElemType> &gl)
 {
 
-	head = new GenListNode<ET>;
+	head = new GenListNode<ElemType>;
 	head->next = NULL;
-	GenListNode<ET> *p,*pend;
+	GenListNode<ElemType> *p,*pend;
 	p = gl.head->next;
 	pend = head;
 	while (p)
 	{
 		if (p->tag == ATOM)
 		{
-			GenListNode<ET> *nd = new GenListNode < ET >;
+			GenListNode<ElemType> *nd = new GenListNode < ElemType >;
 			nd->atom = p->atom;
 			nd->tag = ATOM;
 			nd->next = pend->next;
@@ -73,8 +72,8 @@ TCE GenList<ET>::GenList(const GenList<ET> &gl)
 		}
 		if (p->tag == LIST)
 		{
-			GenList<ET> *nl = new GenList<ET>(*(p->list));
-			GenListNode<ET> *nd = new GenListNode < ET >;
+			GenList<ElemType> *nl = new GenList<ElemType>(*(p->list));
+			GenListNode<ElemType> *nd = new GenListNode < ElemType >;
 			nd->tag = LIST;
 			nd->list = nl;
 			nd->next = pend->next;
@@ -84,9 +83,10 @@ TCE GenList<ET>::GenList(const GenList<ET> &gl)
 		p = p->next;
 	}
 }
-TCE GenList<ET>::~GenList()
+template <class ElemType> 
+GenList<ElemType>::~GenList()
 {
-	GenListNode<ET> *p;
+	GenListNode<ElemType> *p;
 	while (head)
 	{
 		p = head;
@@ -95,34 +95,38 @@ TCE GenList<ET>::~GenList()
 	}
 }
 
-TCE bool GenList<ET>::IsEmpty() const
+template <class ElemType> 
+bool GenList<ElemType>::IsEmpty() const
 {
 	return head->next == NULL;
 }
 
-TCE void GenList<ET>::Insert(const ET &e)
+template <class ElemType> 
+void GenList<ElemType>::Insert(const ElemType &e)
 {
-	GenListNode<ET> *n = new GenListNode < ET > ;
+	GenListNode<ElemType> *n = new GenListNode < ElemType > ;
 	n->atom = e;
 	n->tag = ATOM;
 	n->next = head->next;
 	head->next = n;
 }
 
-TCE void GenList<ET>::Insert(const GenList<ET> &gl)
+template <class ElemType> 
+void GenList<ElemType>::Insert(const GenList<ElemType> &gl)
 {
-	GenList<ET> *nl = new GenList<ET>(gl);
-	GenListNode<ET> *nd = new GenListNode < ET > ;
+	GenList<ElemType> *nl = new GenList<ElemType>(gl);
+	GenListNode<ElemType> *nd = new GenListNode < ElemType > ;
 	nd->tag = LIST;
 	nd->list = nl;
 	nd->next = head->next;
 	head->next = nd;
 }
 
-TCE int GenList<ET>::GetDepth() const
+template <class ElemType> 
+int GenList<ElemType>::GetDepth() const
 {
 	int depth = 0;
-	GenListNode<ET> *p = head->next;
+	GenListNode<ElemType> *p = head->next;
 	while (p)
 	{
 		if (p->tag == LIST)
@@ -134,10 +138,11 @@ TCE int GenList<ET>::GetDepth() const
 	}
 	return ++depth;
 }
-TCE int GenList<ET>::GetLength() const
+template <class ElemType> 
+int GenList<ElemType>::GetLength() const
 {
 	int length = 0;
-	GenListNode<ET> *p = head->next;
+	GenListNode<ElemType> *p = head->next;
 	while (p)
 	{
 		length++;
@@ -145,10 +150,11 @@ TCE int GenList<ET>::GetLength() const
 	}
 	return length;
 }
-TCE void GenList<ET>::Show() const
+template <class ElemType> 
+void GenList<ElemType>::Show() const
 {
 	cout << "(";
-	GenListNode<ET> *p = head -> next;
+	GenListNode<ElemType> *p = head -> next;
 	while (p)
 	{
 		if (p->tag == ATOM)
@@ -156,7 +162,11 @@ TCE void GenList<ET>::Show() const
 			cout << p->atom;
 			if(p->next)cout<< ',';
 		}
-		if (p->tag == LIST)	p->list->Show();
+		if (p->tag == LIST)
+		{
+			p->list->Show();
+			if (p->next)cout << ',';
+		}
 		p = p->next;
 	}
 	cout << ")";
